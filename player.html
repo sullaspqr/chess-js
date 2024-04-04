@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Játékos adatok</title>
+</head>
+<body>
+  <div id="player-data">
+    <h1>Játékos adatok</h1>
+    <!-- Ide fogjuk beszúrni a játékos adatait -->
+  </div>
+<center>
+  <script>
+    // Lekérjük az URL paramétereket, hogy megtudjuk, melyik játékost kell megjeleníteni
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerId = urlParams.get('id');
+
+    // Az adott játékos adatainak lekérése a backendtől (itt helyettesítsd be az adott játékos ID-jét a fetch hívásban)
+    fetch(`https://chess.sulla.hu/chess/${playerId}`)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Hiba történt a lekérdezés során');
+        }
+        return response.json();
+      })
+      .then(player => {
+        // Az adatok megjelenítése
+        const playerDataContainer = document.getElementById('player-data');
+
+        playerDataContainer.style.display = 'flex';
+        playerDataContainer.style.flexDirection = 'column';
+        playerDataContainer.style.justifyContent = 'center';
+        playerDataContainer.style.alignItems = 'center';
+
+        const playerName = document.createElement('h2');
+        playerName.textContent = player.name;
+        playerDataContainer.appendChild(playerName);
+
+        const birthDate = document.createElement('p');
+        birthDate.textContent = `Születési dátum: ${player.birth_date}`;
+        playerDataContainer.appendChild(birthDate);
+
+        const worldChampion = document.createElement('p');  
+        worldChampion.textContent = `Világbajnoki címek: ${player.world_ch_won}`;
+        playerDataContainer.appendChild(worldChampion);
+
+        const playerImage = document.createElement('img');
+      playerImage.src = player.image_url;
+      playerImage.addEventListener('click', () => {
+        window.location.assign(`index.html`);
+      });
+      playerDataContainer.appendChild(playerImage);
+
+        // További adatok hozzáadása, ha szükséges
+      })
+      .catch(error => {
+        console.error('Hiba történt a lekérdezés során:', error);
+      });
+  </script>
+  <a href="/">Vissza a főoldalra</a>
+  </center>
+</body>
+</html>

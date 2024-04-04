@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+// Swagger API végpont URL
+const apiUrl = 'https://chess.sulla.hu/chess';
+
+// Lekérjük az adatokat az API-ról
+fetch(apiUrl)
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Hiba történt a lekérdezés során');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Az adatok feldolgozása
+
+    // Például feltételezzük, hogy az adatok egy tömbben vannak
+    const chessPlayers = data;
+
+    // Megjelenítjük a képeket és szövegeket kis kártyákon
+    chessPlayers.forEach(player => {
+      const playerCard = document.createElement('div');
+      playerCard.classList.add('card');
+      playerCard.style.display = 'flex';
+      playerCard.style.flexDirection = 'column';
+      playerCard.style.justifyContent = 'center';
+      playerCard.style.alignItems = 'center';
+
+      // Például a játékos nevét megjelenítjük
+      const playerName = document.createElement('h2');
+      playerName.textContent = player.name;
+      playerCard.appendChild(playerName);
+
+      const playerImage = document.createElement('img');
+      playerImage.src = player.image_url;
+      playerImage.addEventListener('click', () => {
+        window.location.assign(`player.html?id=${player.id}`);
+      });
+      playerCard.appendChild(playerImage);
+
+      // A játékos profil oldalára mutató link
+      const profileLink = document.createElement('a');
+      profileLink.href = player.profile_url;
+      profileLink.textContent = 'Profil';
+      profileLink.target = '_blank'; 
+      playerCard.appendChild(profileLink);
+
+      document.body.appendChild(playerCard);
+    });
+  })
+  .catch(error => {
+    console.error('Hiba történt a lekérdezés során:', error);
+  });
+
+  </script>
+</body>
+</html>
